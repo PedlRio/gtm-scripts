@@ -1,3 +1,4 @@
+// v2
 (function () {
   function isFilled(selector) {
     var el = document.querySelector(selector);
@@ -47,12 +48,14 @@
     }, 3000);
   }
 
-  function validateFieldsAndToggleSelect() {
-    var select = document.getElementById('card-instalment');
-    if (!select) return;
-
-    var filled = allFieldsValid();
-    select.disabled = !filled;
+  function blockIfInvalid(e) {
+    if (!allFieldsValid()) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('Preencha os dados do cartão antes de escolher o parcelamento.');
+      e.target.blur();
+      e.target.value = ''; // opcional: resetar a escolha
+    }
   }
 
   function attachListeners() {
@@ -62,41 +65,17 @@
       return;
     }
 
-    // Inicialmente desabilita o select
-    select.disabled = true;
+    // Remove qualquer desabilitação anterior
+    select.disabled = false;
 
-    var blockInteraction = function (e) {
-      if (!allFieldsValid()) {
-        e.preventDefault();
-        e.stopPropagation();
-        showToast('Preencha os dados do cartão antes de escolher o parcelamento.');
-        select.blur();
-        select.value = '';
-      }
-    };
+    // Sempre valida no momento da interação
+    select.addEventListener('mousedown', blockIfInvalid, true);
+    select.addEventListener('click', blockIfInvalid, true);
+    select.addEventListener('focus', blockIfInvalid, true);
 
-    // Impede interação quando os campos não estão preenchidos
-    select.addEventListener('mousedown', blockInteraction, true);
-    select.addEventListener('click', blockInteraction, true);
-    select.addEventListener('focus', blockInteraction, true);
-
-    // Também valida dinamicamente os campos
-    var campos = [
-      '#cardNumber4263621',
-      '#cardExpiracy4263621',
-      '#cardHolder',
-      '#card-cvv'
-    ];
-
-    for (var i = 0; i < campos.length; i++) {
-      var input = document.querySelector(campos[i]);
-      if (input) {
-        input.addEventListener('input', validateFieldsAndToggleSelect, false);
-        input.addEventListener('blur', validateFieldsAndToggleSelect, false);
-      }
-    }
+    console.log('✅ Listeners aplicados ao select para validação dinâmica.');
   }
 
-  // Executa assim que o script carregar via jsDelivr
+  // Roda ao carregar
   attachListeners();
 })();
