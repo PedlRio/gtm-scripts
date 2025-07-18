@@ -1,4 +1,5 @@
 (function () {
+  console.log("teste de script")
   function isFilled(selector) {
     var el = document.querySelector(selector);
     var filled = el && el.value && el.value.trim().length > 0;
