@@ -1,21 +1,17 @@
 (function () {
-  console.log("teste de script")
   function isFilled(selector) {
     var el = document.querySelector(selector);
     var filled = el && el.value && el.value.trim().length > 0;
-    console.log('🟡 Campo:', selector, '| Valor:', el ? el.value : 'N/A', '| Preenchido?', filled);
     return filled;
   }
 
   function allFieldsValid() {
-    var valid =
+    return (
       isFilled('#cardNumber4263621') &&
       isFilled('#cardExpiracy4263621') &&
       isFilled('#cardHolder') &&
-      isFilled('#card-cvv');
-
-    console.log('🔍 Validação geral:', valid);
-    return valid;
+      isFilled('#card-cvv')
+    );
   }
 
   function showToast(message) {
@@ -57,30 +53,34 @@
 
     var filled = allFieldsValid();
     select.disabled = !filled;
-    console.log('🧩 Select de parcelamento está', filled ? 'habilitado' : 'desabilitado');
   }
 
   function attachListeners() {
     var select = document.getElementById('card-instalment');
     if (!select) {
-      console.log('❌ Select não encontrado. Reagendando...');
       setTimeout(attachListeners, 300);
       return;
     }
 
+    // Inicialmente desabilita o select
     select.disabled = true;
-    console.log('✅ Select desabilitado no início.');
 
-    select.addEventListener('change', function (e) {
+    var blockInteraction = function (e) {
       if (!allFieldsValid()) {
-        showToast('Preencha os dados do cartão antes de selecionar o parcelamento.');
-        console.log('🚫 Tentativa de selecionar parcelamento sem preencher os campos.');
-        select.value = '';
         e.preventDefault();
         e.stopPropagation();
+        showToast('Preencha os dados do cartão antes de escolher o parcelamento.');
+        select.blur();
+        select.value = '';
       }
-    });
+    };
 
+    // Impede interação quando os campos não estão preenchidos
+    select.addEventListener('mousedown', blockInteraction, true);
+    select.addEventListener('click', blockInteraction, true);
+    select.addEventListener('focus', blockInteraction, true);
+
+    // Também valida dinamicamente os campos
     var campos = [
       '#cardNumber4263621',
       '#cardExpiracy4263621',
@@ -93,10 +93,10 @@
       if (input) {
         input.addEventListener('input', validateFieldsAndToggleSelect, false);
         input.addEventListener('blur', validateFieldsAndToggleSelect, false);
-        console.log('📌 Listener adicionado ao campo:', campos[i]);
       }
     }
   }
 
+  // Executa assim que o script carregar via jsDelivr
   attachListeners();
 })();
