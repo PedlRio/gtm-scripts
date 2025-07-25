@@ -1,5 +1,24 @@
-// v2
+// v3
 (function () {
+
+console.log("ta passando aqui");
+  
+var mmtr_exp = document.createElement("script");
+mmtr_exp.src = "https://cdn.jsdelivr.net/gh/mymetric/scripts@main/experiment.js";
+mmtr_exp.onload = function() {
+    
+    var bucket = bucket_sort();
+      
+    new_experiment("QE4Q6KWrppgygTa", "Bloqueio de Parcelas", experiment_changes);
+
+};
+document.head.appendChild(mmtr_exp);
+
+function experiment_original(exp_id) {console.log("original");}
+  
+function experiment_changes(exp_id) {
+console.log("variante de teste");  
+  
   function isFilled(selector) {
     var el = document.querySelector(selector);
     var filled = el && el.value && el.value.trim().length > 0;
@@ -78,4 +97,5 @@
 
   // Roda ao carregar
   attachListeners();
+}
 })();
