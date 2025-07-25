@@ -1,7 +1,5 @@
 // v4
 (function () {
-
-console.log("ta passando aqui");
   
 var mmtr_exp = document.createElement("script");
 mmtr_exp.src = "https://cdn.jsdelivr.net/gh/mymetric/scripts@main/experiment.js";
@@ -14,10 +12,10 @@ mmtr_exp.onload = function() {
 };
 document.head.appendChild(mmtr_exp);
 
-function experiment_original(exp_id) {console.log("original");}
+function experiment_original(exp_id) {}
   
 function experiment_changes(exp_id) {
-console.log("variante de teste");  
+console.log("mm_QE4Q6KWrppgygTa");  
 function isFilledAndValid(selector) {
   var el = document.querySelector(selector);
   var filled = el && el.value && el.value.trim().length > 0;
@@ -96,7 +94,6 @@ function monitorVisibility() {
       select.addEventListener('click', blockIfInvalid, true);
       select.addEventListener('focus', blockIfInvalid, true);
       select.dataset.listenersApplied = 'true';
-      console.log('✅ Listeners aplicados ao select para validação dinâmica.');
     }
   } else {
     // continua monitorando até ficar visível
